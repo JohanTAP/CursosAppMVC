@@ -10,48 +10,62 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cursosappmvc.R;
+import com.example.cursosappmvc.controller.CursoAdapter;
+import com.example.cursosappmvc.model.Curso;
+import com.example.cursosappmvc.model.CursoDAO;
 import com.example.cursosappmvc.model.database.DatabaseUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public class CursoFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private CursoAdapter cursoAdapter;
+    private List<Curso> listaCursos;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Iniciar la tarea asíncrona para probar la conexión a la base de datos
-        new DatabaseConnectTask().execute();
+        View view = inflater.inflate(R.layout.fragment_curso, container, false);
 
-        return inflater.inflate(R.layout.fragment_curso, container, false);
+        recyclerView = view.findViewById(R.id.recycler_cursos);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Iniciar la tarea asíncrona para cargar los cursos
+        new LoadCursosTask().execute();
+
+        return view;
     }
 
-    private class DatabaseConnectTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCursosTask extends AsyncTask<Void, Void, List<Curso>> {
         private Exception exception = null;
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected List<Curso> doInBackground(Void... voids) {
             try {
-                Connection connection = DatabaseUtil.getConnection(getContext());
-                return (connection != null && !connection.isClosed());
-            } catch (SQLException e) {
+                return new CursoDAO().obtenerCursos(getContext());
+            } catch (Exception e) {
                 exception = e;
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean isConnected) {
-            super.onPostExecute(isConnected);
-            if (isConnected) {
-                Toast.makeText(getActivity(), "Conexión exitosa", Toast.LENGTH_LONG).show();
+        protected void onPostExecute(List<Curso> cursos) {
+            super.onPostExecute(cursos);
+            if (cursos != null) {
+                cursoAdapter = new CursoAdapter(getContext(), cursos);
+                recyclerView.setAdapter(cursoAdapter);
             } else {
-                String errorMessage = (exception != null) ? exception.getMessage() : "Error al conectar";
+                String errorMessage = (exception != null) ? exception.getMessage() : "Error al cargar cursos";
                 Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
             }
         }
     }
-
 }
