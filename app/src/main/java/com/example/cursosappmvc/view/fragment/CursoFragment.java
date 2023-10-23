@@ -17,17 +17,13 @@ import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.controller.CursoAdapter;
 import com.example.cursosappmvc.model.Curso;
 import com.example.cursosappmvc.model.CursoDAO;
-import com.example.cursosappmvc.model.database.DatabaseUtil;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CursoFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private CursoAdapter cursoAdapter;
-    private List<Curso> listaCursos;
 
     @Nullable
     @Override
@@ -68,4 +64,5 @@ public class CursoFragment extends Fragment {
             }
         }
     }
+
 }

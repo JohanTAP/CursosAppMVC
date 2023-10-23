@@ -1,6 +1,7 @@
 package com.example.cursosappmvc.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.cursosappmvc.model.database.DatabaseUtil;
 
@@ -26,9 +27,9 @@ public class CursoDAO {
             resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                int id = resultSet.getInt("cur_id");
-                String nombre = resultSet.getString("cur_nombre");
-                String descripcion = resultSet.getString("cur_descripcion");
+                int id = resultSet.getInt("CUR_ID");
+                String nombre = resultSet.getString("CUR_Nombre");
+                String descripcion = resultSet.getString("CUR_Descripcion");
                 // Aquí se deberían agregar los campos restantes si se necesitan para el objeto Curso
 
                 Curso curso = new Curso();
@@ -39,9 +40,17 @@ public class CursoDAO {
 
                 cursos.add(curso);
             }
+
+            if (cursos.isEmpty()) {
+                Log.d("CursoDAO", "La consulta se ejecutó correctamente pero no devolvió ningún resultado.");
+            } else {
+                Log.d("CursoDAO", "Número de cursos recuperados: " + cursos.size());
+            }
+
         } catch (SQLException e) {
-            // Manejar excepciones de SQL
-            e.printStackTrace();
+            Log.e("CursoDAO", "Error SQL", e);
+        } catch (Exception e) {
+            Log.e("CursoDAO", "Error desconocido al recuperar cursos", e);
         } finally {
             // Finalmente, nos aseguramos de cerrar los recursos
             try {
@@ -60,4 +69,5 @@ public class CursoDAO {
         }
         return cursos;
     }
+
 }

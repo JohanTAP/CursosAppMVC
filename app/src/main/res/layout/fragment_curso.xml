@@ -10,14 +10,14 @@
         android:text="Sección de Cursos"
         android:textSize="24sp" />
 
-        <!-- Otros elementos de la vista pueden ir aquí -->
+    <!-- Otros elementos de la vista pueden ir aquí -->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_cursos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="32dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_cursos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp" />
 
-        <!-- Puedes agregar más vistas aquí si es necesario -->
+    <!-- Puedes agregar más vistas aquí si es necesario -->
 
 </FrameLayout>

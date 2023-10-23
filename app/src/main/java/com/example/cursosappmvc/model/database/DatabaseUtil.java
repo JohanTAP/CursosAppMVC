@@ -45,6 +45,9 @@ public class DatabaseUtil {
             } catch (IOException e) {
                 Log.e(TAG, "Error al abrir config.properties", e);  // Error de log
                 throw new SQLException("Error al leer el archivo de configuración", e);
+            } catch (Exception e) {
+                Log.e(TAG, "Error desconocido al establecer conexión", e);
+                throw new SQLException("Error desconocido", e);
             }
         }
         return connection;
