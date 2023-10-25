@@ -8,18 +8,18 @@
 
     <!-- Título de la sección -->
     <TextView
-        android:id="@+id/tvTituloSeccionCursos"
+        android:id="@+id/tvTituloSeccion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sección de Cursos"
+        android:text="Sección de Lecciones"
         android:textColor="#000"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_gravity="center_horizontal|top"
         android:layout_marginTop="16dp" />
 
-    <!-- RecyclerView para los cursos -->
+    <!-- RecyclerView para las lecciones -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_cursos"
+        android:id="@+id/recyclerLecciones"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="56dp" />

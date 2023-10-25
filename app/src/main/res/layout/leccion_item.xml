@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/leccion_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:hapticFeedbackEnabled="true"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="?attr/selectableItemBackground"> <!-- Efecto ripple al tocar -->
+
+        <!-- Título de la lección -->
+        <TextView
+            android:id="@+id/tituloLeccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/leccion_icon"
+            android:layout_centerVertical="true"
+            android:text="Título de la lección"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="?attr/colorOnSurface" />
+
+        <!-- Icono de lección -->
+        <ImageView
+            android:id="@+id/leccion_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+        <!-- android:tint="?attr/colorOnSurface" /> Color del icono basado en el tema -->
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

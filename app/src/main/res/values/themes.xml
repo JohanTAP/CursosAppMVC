@@ -19,6 +19,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:fontFamily">@font/opendyslexicregular</item>
     </style>
 
 </resources>
