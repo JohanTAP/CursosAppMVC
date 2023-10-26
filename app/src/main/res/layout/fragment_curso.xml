@@ -11,11 +11,11 @@
         android:id="@+id/tvTituloSeccionCursos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sección de Cursos"
-        android:textColor="#000"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Sección de Cursos"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textColor="#000" />
 
     <!-- RecyclerView para los cursos -->
     <androidx.recyclerview.widget.RecyclerView

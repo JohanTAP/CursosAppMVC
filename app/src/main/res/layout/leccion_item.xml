@@ -13,16 +13,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="?attr/selectableItemBackground"> <!-- Efecto ripple al tocar -->
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp"> <!-- Efecto ripple al tocar -->
 
         <!-- Título de la lección -->
         <TextView
             android:id="@+id/tituloLeccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/leccion_icon"
             android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/leccion_icon"
             android:text="Título de la lección"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textColor="?attr/colorOnSurface" />
@@ -33,7 +33,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
         <!-- android:tint="?attr/colorOnSurface" /> Color del icono basado en el tema -->
 
     </RelativeLayout>

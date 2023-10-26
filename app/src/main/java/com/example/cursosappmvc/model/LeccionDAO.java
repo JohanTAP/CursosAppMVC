@@ -4,16 +4,23 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.cursosappmvc.model.database.DatabaseUtil;
+
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeccionDAO {
 
-    public List<Leccion> obtenerLeccionesPorCurso(Context context, int cursoId) {
+    private Context context;
+
+    public LeccionDAO(Context context) {
+        this.context = context;
+    }
+
+    public List<Leccion> obtenerLeccionesPorCurso(int cursoId) {
         List<Leccion> lecciones = new ArrayList<>();
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -88,6 +95,31 @@ public class LeccionDAO {
             // Cerrar recursos (connection, preparedStatement, resultSet)...
         }
         return leccion;
+    }
+
+    public boolean registrarInicioLeccion(int usuarioId, int leccionId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        boolean success = false;
+
+        try {
+            connection = DatabaseUtil.getConnection(context);
+            String query = "INSERT INTO detalleleccion (det_usu_id, det_lec_id, det_fechainicio, det_estadoprogreso) VALUES (?, ?, CURRENT_TIMESTAMP, 'En Progreso')";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, usuarioId);
+            preparedStatement.setInt(2, leccionId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            success = (affectedRows > 0); // Si se afectó al menos una fila, entonces el registro fue exitoso.
+
+        } catch (Exception e) {
+            Log.e("DetalleLeccionDAO", "Error al registrar el inicio de la lección", e);
+            e.printStackTrace();
+        } finally {
+            // Aquí deberías cerrar tus recursos (connection, preparedStatement)...
+        }
+
+        return success;
     }
 
 }

@@ -1,11 +1,11 @@
 package com.example.cursosappmvc.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.model.Leccion;
@@ -41,7 +41,7 @@ public class LeccionDetailActivity extends AppCompatActivity {
         @Override
         protected Leccion doInBackground(Integer... leccionIds) {
             int leccionId = leccionIds[0];
-            LeccionDAO leccionDAO = new LeccionDAO();
+            LeccionDAO leccionDAO = new LeccionDAO(context);
             return leccionDAO.obtenerLeccionPorId(context, leccionId);
         }
 

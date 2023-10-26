@@ -1,19 +1,25 @@
 package com.example.cursosappmvc.controller;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.model.Leccion;
-import com.example.cursosappmvc.view.LeccionDetailActivity; // Importa la Activity que mostrará el contenido de la lección
+import com.example.cursosappmvc.util.SharedPrefManager;
+import com.example.cursosappmvc.view.LeccionDetailActivity;
+import com.example.cursosappmvc.view.LoginActivity;
 
 import java.util.List;
 
@@ -21,11 +27,13 @@ public class LeccionAdapter extends RecyclerView.Adapter<LeccionAdapter.LeccionV
 
     private List<Leccion> listaLecciones;
     private Context context;
+    private DetalleLeccionController detalleLeccionController;
 
     // Constructor
     public LeccionAdapter(Context context, List<Leccion> listaLecciones) {
         this.context = context;
         this.listaLecciones = listaLecciones;
+        this.detalleLeccionController = new DetalleLeccionController(context);
     }
 
     @NonNull
@@ -42,17 +50,66 @@ public class LeccionAdapter extends RecyclerView.Adapter<LeccionAdapter.LeccionV
         Log.d("LeccionAdapter", "Mostrando lección: " + leccion.getTitulo());
         holder.tituloLeccion.setText(leccion.getTitulo());
 
-        // Configura el OnClickListener para abrir ContenidoLeccionActivity al hacer clic
+        // Configura el OnClickListener
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, LeccionDetailActivity.class);
-                intent.putExtra("leccionId", leccion.getId());
-                context.startActivity(intent);
+                if (!isUserLoggedIn()) {
+                    showLoginDialog();
+                } else {
+                    int usuarioId = SharedPrefManager.getInstance(context).getUserId();
+                    detalleLeccionController.leccionYaIniciada(usuarioId, leccion.getId(), isStarted -> {
+                        if (isStarted) {
+                            // Si ya ha iniciado la lección, ir directamente a LeccionDetailActivity
+                            Intent intent = new Intent(context, LeccionDetailActivity.class);
+                            intent.putExtra("leccionId", leccion.getId());
+                            context.startActivity(intent);
+                        } else {
+                            // Mostrar diálogo para comenzar lección
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Comenzar Lección")
+                                    .setMessage("¿Quieres empezar la lección " + leccion.getTitulo() + "?")
+                                    .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            detalleLeccionController.registrarInicioLeccion(usuarioId, leccion.getId(), success -> {
+                                                if (success) {
+                                                    Intent intent = new Intent(context, LeccionDetailActivity.class);
+                                                    intent.putExtra("leccionId", leccion.getId());
+                                                    context.startActivity(intent);
+                                                } else {
+                                                    Toast.makeText(context, "Error al registrar el inicio de la lección", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .setNegativeButton("No", null)
+                                    .show();
+                        }
+                    });
+                }
             }
         });
+    }
 
-        // Espacio para más datos en del modelo de Leccion, se pueden vincular aquí.
+    private boolean isUserLoggedIn() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isLoggedIn", false);
+    }
+
+    private void showLoginDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Iniciar sesión requerido");
+        builder.setMessage("Necesitas iniciar sesión para acceder a esta lección.");
+        builder.setPositiveButton("Iniciar sesión", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Redirige al usuario al LoginActivity
+                Intent loginIntent = new Intent(context, LoginActivity.class);
+                context.startActivity(loginIntent);
+            }
+        });
+        builder.setNegativeButton("Cancelar", null);
+        builder.show();
     }
 
     @Override
@@ -70,5 +127,4 @@ public class LeccionAdapter extends RecyclerView.Adapter<LeccionAdapter.LeccionV
             tituloLeccion = itemView.findViewById(R.id.tituloLeccion);
         }
     }
-
 }

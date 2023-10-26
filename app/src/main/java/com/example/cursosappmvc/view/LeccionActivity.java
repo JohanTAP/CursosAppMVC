@@ -5,9 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.controller.LeccionAdapter;
 import com.example.cursosappmvc.model.Leccion;
@@ -58,7 +60,7 @@ public class LeccionActivity extends AppCompatActivity {
         protected List<Leccion> doInBackground(Void... voids) {
             try {
                 // Obtener las lecciones utilizando LeccionDAO
-                return new LeccionDAO().obtenerLeccionesPorCurso(getApplicationContext(), cursoId);
+                return new LeccionDAO(getApplicationContext()).obtenerLeccionesPorCurso(cursoId);
             } catch (Exception e) {
                 Log.e("LeccionActivity", "Error al cargar las lecciones", e);
                 return null;
