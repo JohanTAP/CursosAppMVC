@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private TextInputLayout passwordTextInputLayout;
     private TextInputLayout usernameTextInputLayout;
+    private int cursoId = -1;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        cursoId = getIntent().getIntExtra("cursoId", -1); // Guarda el cursoId
 
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -123,6 +126,13 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putInt("userId", userId);
                     editor.apply();
 
+                    // Inicia LeccionActivity pasando el cursoId
+                    if (cursoId != -1) {
+                        Intent intent = new Intent(LoginActivity.this, LeccionActivity.class);
+                        intent.putExtra("cursoId", cursoId);
+                        startActivity(intent);
+                    }
+
                     finish();
                 } else if (message.what == 0) {
                     usernameTextInputLayout.setError("No pudimos encontrar la combinación de correo electrónico y contraseña.");
@@ -133,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }
         });
-
 
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(new VerificarCredencialesTask(username, password, handler));
@@ -164,7 +173,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             handler.sendMessage(message);
         }
-
 
     }
 

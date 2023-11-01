@@ -97,29 +97,62 @@ public class LeccionDAO {
         return leccion;
     }
 
-    public boolean registrarInicioLeccion(int usuarioId, int leccionId) {
+    public boolean leccionCompletadaPorUsuario(int usuarioId, int leccionId) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        boolean success = false;
-
         try {
             connection = DatabaseUtil.getConnection(context);
-            String query = "INSERT INTO detalleleccion (det_usu_id, det_lec_id, det_fechainicio, det_estadoprogreso) VALUES (?, ?, CURRENT_TIMESTAMP, 'En Progreso')";
-            preparedStatement = connection.prepareStatement(query);
+            String checkQuery = "SELECT 1 FROM DetalleLeccion WHERE DET_USU_ID = ? AND DET_LEC_ID = ? AND DET_EstadoProgreso = 'Completada'";
+            preparedStatement = connection.prepareStatement(checkQuery);
             preparedStatement.setInt(1, usuarioId);
             preparedStatement.setInt(2, leccionId);
-
-            int affectedRows = preparedStatement.executeUpdate();
-            success = (affectedRows > 0); // Si se afectó al menos una fila, entonces el registro fue exitoso.
-
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs.next();  // Devuelve true si la lección ha sido completada por el usuario, false en caso contrario
         } catch (Exception e) {
-            Log.e("DetalleLeccionDAO", "Error al registrar el inicio de la lección", e);
-            e.printStackTrace();
+            Log.e("LeccionDAO", "Error al verificar si la lección ha sido completada", e);
+            return false;
         } finally {
-            // Aquí deberías cerrar tus recursos (connection, preparedStatement)...
+            // Cierra las conexiones y declaraciones aquí
+            // (connection, preparedStatement)
         }
+    }
 
-        return success;
+    public boolean puedeAccederALeccion(int usuarioId, int leccionId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DatabaseUtil.getConnection(context);
+
+            // Primero obtiene el orden de la lección actual
+            String ordenQuery = "SELECT lec_ordenleccion FROM leccion WHERE lec_id = ?";
+            preparedStatement = connection.prepareStatement(ordenQuery);
+            preparedStatement.setInt(1, leccionId);
+            ResultSet rsOrden = preparedStatement.executeQuery();
+            if (rsOrden.next()) {
+                int ordenActual = rsOrden.getInt("lec_ordenleccion");
+
+                // Si es la primera lección, siempre se puede acceder
+                if (ordenActual == 1) {
+                    return true;
+                }
+
+                // Luego, verifica si la lección anterior ha sido completada
+                String checkQuery = "SELECT 1 FROM leccion l JOIN DetalleLeccion d ON l.lec_id = d.DET_LEC_ID WHERE d.DET_USU_ID = ? AND l.lec_ordenleccion = ? AND d.DET_EstadoProgreso = 'Completada'";
+                preparedStatement = connection.prepareStatement(checkQuery);
+                preparedStatement.setInt(1, usuarioId);
+                preparedStatement.setInt(2, ordenActual - 1); // lección anterior
+                ResultSet rsCheck = preparedStatement.executeQuery();
+                return rsCheck.next();
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("LeccionDAO", "Error al verificar el acceso a la lección", e);
+            return false;
+        } finally {
+            // Cierra las conexiones y declaraciones aquí
+            // (connection, preparedStatement)
+        }
     }
 
 }

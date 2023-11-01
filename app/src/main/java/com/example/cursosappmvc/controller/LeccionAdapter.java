@@ -29,6 +29,9 @@ public class LeccionAdapter extends RecyclerView.Adapter<LeccionAdapter.LeccionV
     private Context context;
     private DetalleLeccionController detalleLeccionController;
 
+    private int cursoId = -1; // Añade esta línea
+
+
     // Constructor
     public LeccionAdapter(Context context, List<Leccion> listaLecciones) {
         this.context = context;
@@ -63,6 +66,7 @@ public class LeccionAdapter extends RecyclerView.Adapter<LeccionAdapter.LeccionV
                             // Si ya ha iniciado la lección, ir directamente a LeccionDetailActivity
                             Intent intent = new Intent(context, LeccionDetailActivity.class);
                             intent.putExtra("leccionId", leccion.getId());
+                            intent.putExtra("cursoId", cursoId);
                             context.startActivity(intent);
                         } else {
                             // Mostrar diálogo para comenzar lección

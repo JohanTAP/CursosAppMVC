@@ -14,6 +14,7 @@ import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.controller.LeccionAdapter;
 import com.example.cursosappmvc.model.Leccion;
 import com.example.cursosappmvc.model.LeccionDAO;
+import com.example.cursosappmvc.util.SharedPrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class LeccionActivity extends AppCompatActivity {
 
     private RecyclerView leccionesRecyclerView;
     private LeccionAdapter leccionAdapter;
+    private int usuarioId;  // Añade una variable para almacenar el usuarioId
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,9 @@ public class LeccionActivity extends AppCompatActivity {
         leccionAdapter = new LeccionAdapter(this, new ArrayList<>());
         leccionesRecyclerView.setAdapter(leccionAdapter);
 
+        // Obtener el usuarioId desde SharedPrefManager
+        usuarioId = SharedPrefManager.getInstance(this).getUserId();
+
         // Obtener el ID del curso desde el Intent
         Intent intent = getIntent();
         int cursoId = intent.getIntExtra("cursoId", -1);
@@ -42,7 +47,7 @@ public class LeccionActivity extends AppCompatActivity {
 
         if (cursoId != -1) {
             // Iniciar la tarea asíncrona para cargar las lecciones
-            new LoadLeccionesTask(cursoId).execute();
+            new LoadLeccionesTask(cursoId, usuarioId).execute();  // Pasa usuarioId a la tarea
         } else {
             Log.e("LeccionActivity", "Error: no se recibió un ID de curso válido.");
             Toast.makeText(this, "Error al cargar las lecciones: no se recibió el ID del curso", Toast.LENGTH_LONG).show();
@@ -51,15 +56,17 @@ public class LeccionActivity extends AppCompatActivity {
 
     private class LoadLeccionesTask extends AsyncTask<Void, Void, List<Leccion>> {
         private int cursoId;
+        private int usuarioId;  // Añade una variable para almacenar el usuarioId
 
-        public LoadLeccionesTask(int cursoId) {
+        public LoadLeccionesTask(int cursoId, int usuarioId) {  // Modifica el constructor para aceptar usuarioId
             this.cursoId = cursoId;
+            this.usuarioId = usuarioId;
         }
 
         @Override
         protected List<Leccion> doInBackground(Void... voids) {
             try {
-                // Obtener las lecciones utilizando LeccionDAO
+                // Aquí puedes utilizar usuarioId si es necesario para obtener lecciones específicas para un usuario
                 return new LeccionDAO(getApplicationContext()).obtenerLeccionesPorCurso(cursoId);
             } catch (Exception e) {
                 Log.e("LeccionActivity", "Error al cargar las lecciones", e);

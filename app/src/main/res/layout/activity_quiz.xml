@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:indeterminate="false"
+        android:max="100" />  <!-- Establece el máximo según el número total de preguntas -->
+
+
+    <!-- Pregunta -->
+    <TextView
+        android:id="@+id/tvPregunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp"
+        android:text="Pregunta"
+        android:textSize="18sp" />
+
+    <!-- Opciones de respuesta (usaremos un RadioGroup para manejar las opciones múltiples) -->
+    <RadioGroup
+        android:id="@+id/rgOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPregunta"
+        android:layout_marginTop="16dp">
+
+        <!-- Las opciones se añadirán dinámicamente desde el controlador -->
+    </RadioGroup>
+
+    <!-- Botón para enviar respuesta -->
+    <Button
+        android:id="@+id/btnResponder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rgOpciones"
+        android:layout_marginTop="16dp"
+        android:text="Responder" />
+
+</RelativeLayout>

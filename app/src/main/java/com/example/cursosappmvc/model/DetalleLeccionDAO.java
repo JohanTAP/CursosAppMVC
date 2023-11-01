@@ -87,11 +87,41 @@ public class DetalleLeccionDAO {
 
     }
 
+    public boolean marcarLeccionComoCompletada(int usuarioId, int leccionId) {
+        Log.d("DetalleLeccionDAO", "Marcando lección como completada para usuario ID: " + usuarioId + " y lección ID: " + leccionId);
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = DatabaseUtil.getConnection(context);
+            String query = "UPDATE DetalleLeccion SET DET_EstadoProgreso = 'Completado' WHERE DET_USU_ID = ? AND DET_LEC_ID = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, usuarioId);
+            preparedStatement.setInt(2, leccionId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            Log.e("DetalleLeccionDAO", "Error al marcar la lección como completada", e);
+            return false;
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                Log.e("DetalleLeccionDAO", "Error al cerrar recursos", e);
+            }
+        }
+    }
 
     // Añadir esta interfaz al principio de tu clase
     public interface OnLeccionIniciadaListener {
         void onResult(boolean isStarted);
     }
-
 
 }

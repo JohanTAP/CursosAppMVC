@@ -30,5 +30,4 @@ public class SharedPrefManager {
         return sharedPreferences.getInt("userId", -1); // retorna -1 si no hay un ID almacenado
     }
 
-    // Puedes añadir otros métodos aquí para establecer y obtener otros valores de SharedPreferences si lo necesitas.
 }
