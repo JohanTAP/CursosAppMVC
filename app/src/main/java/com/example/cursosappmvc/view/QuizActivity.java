@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cursosappmvc.MainActivity;
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.model.DetalleLeccionDAO;
 import com.example.cursosappmvc.model.Opcion;
@@ -200,7 +201,7 @@ public class QuizActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Intent intent = new Intent(QuizActivity.this, LeccionActivity.class);
+            Intent intent = new Intent(QuizActivity.this, MainActivity.class);
             intent.putExtra("leccionId", leccionId);
             startActivity(intent);
             finish();
