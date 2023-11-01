@@ -6,6 +6,8 @@ public class Leccion {
     private String titulo;
     private String contenido;
     private int ordenLeccion;
+    private boolean completada;
+    private boolean accesible;
 
     // Constructor
 
@@ -52,6 +54,22 @@ public class Leccion {
 
     public void setOrdenLeccion(int ordenLeccion) {
         this.ordenLeccion = ordenLeccion;
+    }
+
+    public boolean isCompletada() {
+        return completada;
+    }
+
+    public void setCompletada(boolean completada) {
+        this.completada = completada;
+    }
+
+    public boolean isAccesible() {
+        return accesible;
+    }
+
+    public void setAccesible(boolean accesible) {
+        this.accesible = accesible;
     }
 
 }

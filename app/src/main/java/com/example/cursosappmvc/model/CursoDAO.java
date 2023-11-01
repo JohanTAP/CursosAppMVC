@@ -36,6 +36,7 @@ public class CursoDAO {
                 curso.setId(id);
                 curso.setNombre(nombre);
                 curso.setDescripcion(descripcion);
+                curso.setImagenUrl(resultSet.getString("cur_imagen_url"));
                 // Setear los campos restantes al objeto curso
 
                 cursos.add(curso);

@@ -21,19 +21,21 @@
             android:id="@+id/tituloLeccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/leccion_icon"
-            android:text="Título de la lección"
+            android:text=""
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textColor="?attr/colorOnSurface" />
 
         <!-- Icono de lección -->
         <ImageView
             android:id="@+id/leccion_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp" />
         <!-- android:tint="?attr/colorOnSurface" /> Color del icono basado en el tema -->
 
     </RelativeLayout>

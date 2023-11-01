@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/cursoImage"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="250dp"
             android:scaleType="centerCrop" />
 
         <TextView

@@ -1,13 +1,12 @@
 package com.example.cursosappmvc.view;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.cursosappmvc.MainActivity;
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.controller.UsuarioController;
+import com.example.cursosappmvc.util.SharedPrefManager;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.concurrent.Executor;
@@ -119,16 +119,23 @@ public class LoginActivity extends AppCompatActivity {
                     int userId = (int) message.obj;
                     showToast("Inicio de sesión exitoso");
 
-                    // Guardar estado de inicio de sesión y el ID del usuario
-                    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("isLoggedIn", true);
-                    editor.putInt("userId", userId);
-                    editor.apply();
+                    // Usar SharedPrefManager para guardar el estado de inicio de sesión y el ID del usuario
+                    SharedPrefManager sharedPrefManager = SharedPrefManager.getInstance(LoginActivity.this);
+                    sharedPrefManager.setUserLoggedIn(true);
+                    sharedPrefManager.setUserId(userId);
+
+                    Log.d("LoginActivity", "UsuarioId guardado: " + userId);
+
+                    // Agregar un log adicional para verificar inmediatamente el valor guardado
+                    int storedUserId = sharedPrefManager.getUserId();
+                    Log.d("LoginActivity", "UsuarioId recuperado inmediatamente después de guardar: " + storedUserId);
+
+                    // Suponiendo que el inicio de sesión fue exitoso...
+                    sharedPrefManager.setShouldRefreshLecciones(true);
 
                     // Inicia LeccionActivity pasando el cursoId
                     if (cursoId != -1) {
-                        Intent intent = new Intent(LoginActivity.this, LeccionActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("cursoId", cursoId);
                         startActivity(intent);
                     }
@@ -147,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(new VerificarCredencialesTask(username, password, handler));
     }
+
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

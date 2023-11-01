@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -21,7 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="32dp"
-        android:text="Pregunta"
+        android:text=""
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="18sp" />
 
     <!-- Opciones de respuesta (usaremos un RadioGroup para manejar las opciones múltiples) -->
@@ -36,12 +39,18 @@
     </RadioGroup>
 
     <!-- Botón para enviar respuesta -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnResponder"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rgOpciones"
         android:layout_marginTop="16dp"
-        android:text="Responder" />
+        android:backgroundTint="@color/teal_700"
+        android:text="Responder"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </RelativeLayout>

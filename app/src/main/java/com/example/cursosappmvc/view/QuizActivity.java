@@ -2,8 +2,10 @@ package com.example.cursosappmvc.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -111,6 +113,11 @@ public class QuizActivity extends AppCompatActivity {
         RadioButton rbSeleccionado = findViewById(selectedOptionId);
         boolean esCorrecta = false;
 
+        if (rbSeleccionado == null) {
+            Snackbar.make(v, "Debes seleccionar una opción", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
         for (Opcion opcion : todasLasPreguntas.get(preguntaActualIndex).getOpciones()) {
             if (opcion.getOpcionId() == selectedOptionId && opcion.isCorrecta()) {
                 esCorrecta = true;
@@ -121,6 +128,8 @@ public class QuizActivity extends AppCompatActivity {
         if (esCorrecta) {
             rbSeleccionado.setBackgroundColor(Color.GREEN);
             Snackbar.make(v, "¡Correcto!", Snackbar.LENGTH_SHORT).show();
+            reproducirSonido(R.raw.correct_answer); // Asegúrate de que el archivo correct_answer.mp3 esté en res/raw
+            darFeedbackHaptico();
 
             rbSeleccionado.postDelayed(new Runnable() {
                 @Override
@@ -139,6 +148,26 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             rbSeleccionado.setBackgroundColor(Color.RED);
             Snackbar.make(v, "Incorrecto, intenta de nuevo.", Snackbar.LENGTH_SHORT).show();
+            reproducirSonido(R.raw.wrong_answer); // Asegúrate de que el archivo wrong_answer.mp3 esté en res/raw
+            darFeedbackHaptico();
+        }
+    }
+
+    private void reproducirSonido(int soundResourceId) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, soundResourceId);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+        mediaPlayer.start();
+    }
+
+    private void darFeedbackHaptico() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            vibrator.vibrate(100); // Vibrate for 100 milliseconds
         }
     }
 

@@ -4,6 +4,7 @@ public class Curso {
     private int id;
     private String nombre;
     private String descripcion;
+    private String imagenUrl;
 
     // Constructor
 
@@ -11,6 +12,14 @@ public class Curso {
     }
 
     // Getters y setters
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
 
     public int getId() {
         return id;
