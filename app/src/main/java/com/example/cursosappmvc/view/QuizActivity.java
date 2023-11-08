@@ -141,14 +141,16 @@ public class QuizActivity extends AppCompatActivity {
                     } else {
                         progressBar.setProgress(100);
                         Snackbar.make(v, "¡Felicidades! Completaste el Quiz.", Snackbar.LENGTH_LONG).show();
+                        reproducirSonido(R.raw.success);
+                        darFeedbackHaptico();
                         new MarcarLeccionComoCompletadaTask().execute();
                     }
                 }
-            }, 1000);
+            }, 1500);
         } else {
             rbSeleccionado.setBackgroundColor(Color.RED);
             Snackbar.make(v, "Incorrecto, intenta de nuevo.", Snackbar.LENGTH_SHORT).show();
-            reproducirSonido(R.raw.wrong_answer); // Asegúrate de que el archivo wrong_answer.mp3 esté en res/raw
+            reproducirSonido(R.raw.wrong_answer);
             darFeedbackHaptico();
         }
     }

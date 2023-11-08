@@ -38,5 +38,4 @@ public class DetalleLeccionController {
         void onComplete(boolean success);
     }
 
-
 }

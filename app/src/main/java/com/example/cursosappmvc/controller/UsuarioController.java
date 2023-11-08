@@ -25,7 +25,6 @@ public class UsuarioController {
         return -1;
     }
 
-
     public boolean registrarUsuario(Usuario usuario) {
         return usuarioDAO.guardar(usuario);
     }
