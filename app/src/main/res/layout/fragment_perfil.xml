@@ -1,13 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:background="#F5F5F5"
+    android:padding="16dp">
 
+    <!-- Título del Fragmento de Perfil -->
     <TextView
+        android:id="@+id/titlePerfilTextView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sección de Perfil"
-        android:textSize="24sp" />
+        android:layout_marginTop="16dp"
+        android:text="Perfil del Usuario"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <!-- Campo Nombre -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nombreTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Nombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titlePerfilTextView2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Primer Apellido -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/apellido1TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Primer Apellido"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nombreTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextApellido1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Segundo Apellido -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/apellido2TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Segundo Apellido"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/apellido1TextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextApellido2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Correo Electrónico -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/correoTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Correo Electrónico"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/apellido2TextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextCorreoElectronico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Ciudad -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ciudadTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Ciudad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/correoTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Dirección -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/direccionTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Dirección"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ciudadTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Teléfono -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/telefonoTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Teléfono"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/direccionTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:enabled="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón Editar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonEditarPerfil"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/teal_700"
+        android:text="Editar"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/telefonoTextInputLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

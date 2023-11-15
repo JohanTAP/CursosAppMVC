@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout passwordTextInputLayout;
     private TextInputLayout usernameTextInputLayout;
     private int cursoId = -1;
+    private int loginAttempts = 0; // Contador de intentos de inicio de sesión
+
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Agrega aquí la lógica para abrir la actividad ForgotPasswordActivity
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -88,11 +91,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginUser(View view) {
+
+        if (loginAttempts >= 3) {
+            showToast("Demasiados intentos fallidos. Por favor, contacta con el administrador.");
+            return;
+        }
+
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         if (username.isEmpty()) {
             usernameTextInputLayout.setError("Ingresa un correo electrónico.");
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+            usernameTextInputLayout.setError("El formato del correo electrónico no es válido.");
             return;
         } else {
             usernameTextInputLayout.setError(null); // Borrar el mensaje de error
@@ -116,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         Handler handler = new Handler(new Handler.Callback() {
             public boolean handleMessage(Message message) {
                 if (message.what == 1) {
+
                     int userId = (int) message.obj;
                     showToast("Inicio de sesión exitoso");
 
@@ -123,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPrefManager sharedPrefManager = SharedPrefManager.getInstance(LoginActivity.this);
                     sharedPrefManager.setUserLoggedIn(true);
                     sharedPrefManager.setUserId(userId);
-
+                    loginAttempts = 0; // Reiniciar el contador de intentos de inicio de sesión
                     Log.d("LoginActivity", "UsuarioId guardado: " + userId);
 
                     // Agregar un log adicional para verificar inmediatamente el valor guardado
@@ -144,6 +157,13 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (message.what == 0) {
                     usernameTextInputLayout.setError("No pudimos encontrar la combinación de correo electrónico y contraseña.");
                     passwordTextInputLayout.setError("Verifica tus datos de inicio de sesión.");
+                    loginAttempts++;
+                    if (loginAttempts >= 3) {
+                        showToast("Demasiados intentos fallidos. Por favor, contacta con el administrador.");
+                    } else {
+                        usernameTextInputLayout.setError("No pudimos encontrar la combinación de correo electrónico y contraseña.");
+                        passwordTextInputLayout.setError("Verifica tus datos de inicio de sesión.");
+                    }
                 } else {
                     showToast(message.obj.toString());
                 }
