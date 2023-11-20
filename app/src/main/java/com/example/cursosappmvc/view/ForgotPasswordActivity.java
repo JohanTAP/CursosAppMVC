@@ -1,7 +1,5 @@
 package com.example.cursosappmvc.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -21,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cursosappmvc.R;
 import com.example.cursosappmvc.model.database.DatabaseUtil;
@@ -534,6 +534,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 showMessage("Contraseña cambiada con éxito");
                 Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 // Ocurrió un error al actualizar la contraseña, muestra un Toast con el mensaje de error.
                 showMessage("Error al cambiar la contraseña. Por favor, inténtelo de nuevo.");

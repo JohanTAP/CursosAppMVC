@@ -1,6 +1,7 @@
 package com.example.cursosappmvc.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.cursosappmvc.model.Usuario;
 import com.example.cursosappmvc.model.UsuarioDAO;
@@ -14,7 +15,9 @@ public class UsuarioController {
     }
 
     public boolean existeUsuarioConCredenciales(String correo, String contrasena) {
-        return usuarioDAO.verificarCredenciales(correo, contrasena);
+        // Convertir la contraseña ingresada a su hash
+        String hashedPassword = UsuarioDAO.hashPassword(contrasena);
+        return usuarioDAO.verificarCredenciales(correo, hashedPassword);
     }
 
     public int iniciarSesion(String correoElectronico, String contrasena) {
@@ -36,4 +39,28 @@ public class UsuarioController {
     private String generarToken() {
         return String.valueOf(System.currentTimeMillis());
     }
+
+    public Usuario obtenerDetallesUsuario(int userId) {
+        Usuario usuario = usuarioDAO.buscarPorId(userId);
+        if (usuario == null) {
+            Log.e("UsuarioController", "No se encontró usuario con ID: " + userId);
+        }
+        return usuario;
+    }
+
+    public boolean actualizarUsuario(Usuario usuario) {
+        return usuarioDAO.actualizarUsuario(usuario);
+    }
+
+    public boolean verificarContraseñaPorId(int userId, String contrasena) {
+        Usuario usuario = usuarioDAO.buscarPorId(userId);
+        if (usuario != null) {
+            String storedPasswordHash = usuario.getContrasenaHash();
+            String enteredPasswordHash = UsuarioDAO.hashPassword(contrasena);
+            return storedPasswordHash.equals(enteredPasswordHash);
+        }
+        return false;
+    }
+
+
 }

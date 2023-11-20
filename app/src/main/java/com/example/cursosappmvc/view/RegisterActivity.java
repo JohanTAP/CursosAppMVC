@@ -124,11 +124,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public interface EmailSendCallback {
-        void onSuccess();
-        void onFailure(String errorMessage);
-    }
-
     private void sendEmail(final String email, final String subject, final String messageBody, EmailSendCallback callback) {
         ExecutorService emailExecutor = Executors.newSingleThreadExecutor();
         emailExecutor.submit(() -> {
@@ -174,6 +169,12 @@ public class RegisterActivity extends AppCompatActivity {
         message.setSubject(subject);
         message.setText(messageBody);
         return message;
+    }
+
+    public interface EmailSendCallback {
+        void onSuccess();
+
+        void onFailure(String errorMessage);
     }
 
     private class UserRegistrationTask extends AsyncTask<Void, Void, String> {

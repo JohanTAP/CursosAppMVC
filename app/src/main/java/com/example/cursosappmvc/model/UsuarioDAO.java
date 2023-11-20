@@ -1,6 +1,7 @@
 package com.example.cursosappmvc.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.cursosappmvc.model.database.DatabaseUtil;
 
@@ -132,6 +133,80 @@ public class UsuarioDAO {
             e.printStackTrace();
         } finally {
             // Cierra las conexiones y declaraciones aquí
+        }
+        return false;
+    }
+
+    public Usuario buscarPorId(int userId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DatabaseUtil.getConnection(context);
+            String query = "SELECT * FROM Usuario WHERE USU_ID = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(resultSet.getInt("USU_ID"));
+                usuario.setNombre(resultSet.getString("USU_Nombre"));
+                usuario.setApellido1(resultSet.getString("USU_Apellido1")); // Asegúrate de que estos nombres de columna coincidan
+                usuario.setApellido2(resultSet.getString("USU_Apellido2")); // con los de tu base de datos
+                usuario.setCorreoElectronico(resultSet.getString("USU_CorreoElectronico"));
+                usuario.setCiudad(resultSet.getString("USU_Ciudad"));
+                usuario.setDireccion(resultSet.getString("USU_Direccion"));
+                usuario.setTelefono(resultSet.getString("USU_Telefono"));
+                usuario.setContrasenaHash(resultSet.getString("USU_Contrasena"));
+                // Llenar los demás campos del usuario
+                Log.d("UsuarioDAO", "Usuario encontrado: ID = " + usuario.getId() + ", Nombre = " + usuario.getNombre());
+                return usuario;
+            } else {
+                Log.d("UsuarioDAO", "No se encontraron resultados para el ID: " + userId);
+            }
+        } catch (SQLException e) {
+            Log.e("UsuarioDAO", "Error SQL al buscar usuario con ID: " + userId, e);
+        } finally {
+            // Asegurarse de cerrar los recursos
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException ex) {
+                Log.e("UsuarioDAO", "Error al cerrar recursos de SQL", ex);
+            }
+        }
+        return null;
+    }
+
+    public boolean actualizarUsuario(Usuario usuario) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = DatabaseUtil.getConnection(context);
+            String query = "UPDATE Usuario SET USU_Nombre = ?, USU_Apellido1 = ?, USU_Apellido2 = ?, USU_CorreoElectronico = ?, USU_Ciudad = ?, USU_Direccion = ?, USU_Telefono = ? WHERE USU_ID = ?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, usuario.getNombre());
+            preparedStatement.setString(2, usuario.getApellido1());
+            preparedStatement.setString(3, usuario.getApellido2());
+            preparedStatement.setString(4, usuario.getCorreoElectronico());
+            preparedStatement.setString(5, usuario.getCiudad());
+            preparedStatement.setString(6, usuario.getDireccion());
+            preparedStatement.setString(7, usuario.getTelefono());
+            preparedStatement.setInt(8, usuario.getId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar conexiones y declaraciones aquí
         }
         return false;
     }

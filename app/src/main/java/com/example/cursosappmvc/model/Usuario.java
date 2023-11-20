@@ -15,6 +15,8 @@ public class Usuario {
     private int tipoUsuarioId;
     private String tokenReset;
     private Date fechaTokenReset;
+    private String contrasenaHash;
+    private Date fechaNacimiento;
 
     // Constructor
 
@@ -117,6 +119,18 @@ public class Usuario {
 
     public void setFechaTokenReset(Date fechaTokenReset) {
         this.fechaTokenReset = fechaTokenReset;
+    }
+
+    public String getContrasenaHash() {
+        return contrasenaHash;
+    }
+
+    public void setContrasenaHash(String contrasenaHash) {
+        this.contrasenaHash = contrasenaHash;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
 }

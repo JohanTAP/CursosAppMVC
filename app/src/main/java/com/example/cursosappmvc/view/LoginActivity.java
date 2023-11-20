@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Agrega aquí la lógica para abrir la actividad ForgotPasswordActivity
                 Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

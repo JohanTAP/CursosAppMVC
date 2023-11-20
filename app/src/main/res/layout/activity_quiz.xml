@@ -24,7 +24,7 @@
         android:layout_marginTop="32dp"
         android:text=""
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="#000"
         android:textSize="18sp" />
 
     <!-- Opciones de respuesta (usaremos un RadioGroup para manejar las opciones múltiples) -->

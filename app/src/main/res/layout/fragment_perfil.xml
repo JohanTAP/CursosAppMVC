@@ -74,6 +74,27 @@
             android:enabled="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Campo Fecha de Nacimiento -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fechaNacimientoTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Fecha de Nacimiento (DD/MM/AAAA)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/apellido2TextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextFechaNacimiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Campo Correo Electrónico -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/correoTextInputLayout"
@@ -83,14 +104,15 @@
         android:hint="Correo Electrónico"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/apellido2TextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/fechaNacimientoTextInputLayout">
 
+        <!-- Campo Correo Electrónico -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextCorreoElectronico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:enabled="false" />
+            android:enabled="false"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Campo Ciudad -->
@@ -144,8 +166,8 @@
             android:id="@+id/editTextTelefono"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:enabled="false" />
+            android:enabled="false"
+            android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Botón Editar -->

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.cursosappmvc.util.SharedPrefManager;
 import com.example.cursosappmvc.view.fragment.CursoFragment;
 import com.example.cursosappmvc.view.fragment.PerfilFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,6 +19,11 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new CursoFragment();
                 } else if (item.getItemId() == R.id.nav_perfil) {
                     selectedFragment = new PerfilFragment();
+                    // Pasar el ID del usuario al PerfilFragment
+                    Bundle bundle = new Bundle();
+                    int userId = SharedPrefManager.getInstance(this).getUserId();
+                    bundle.putInt("userId", userId);
+                    selectedFragment.setArguments(bundle);
                 }
 
                 // Comenzamos la transacción del fragmento
@@ -41,4 +47,5 @@ public class MainActivity extends AppCompatActivity {
                     new CursoFragment()).commit();
         }
     }
+
 }
