@@ -160,6 +160,7 @@ public class UsuarioDAO {
                 usuario.setCiudad(resultSet.getString("USU_Ciudad"));
                 usuario.setDireccion(resultSet.getString("USU_Direccion"));
                 usuario.setTelefono(resultSet.getString("USU_Telefono"));
+                usuario.setFechaNacimiento(resultSet.getDate("USU_Fecha_Nacimiento"));
                 usuario.setContrasenaHash(resultSet.getString("USU_Contrasena"));
                 // Llenar los demás campos del usuario
                 Log.d("UsuarioDAO", "Usuario encontrado: ID = " + usuario.getId() + ", Nombre = " + usuario.getNombre());
@@ -188,7 +189,7 @@ public class UsuarioDAO {
 
         try {
             connection = DatabaseUtil.getConnection(context);
-            String query = "UPDATE Usuario SET USU_Nombre = ?, USU_Apellido1 = ?, USU_Apellido2 = ?, USU_CorreoElectronico = ?, USU_Ciudad = ?, USU_Direccion = ?, USU_Telefono = ? WHERE USU_ID = ?";
+            String query = "UPDATE Usuario SET USU_Nombre = ?, USU_Apellido1 = ?, USU_Apellido2 = ?, USU_CorreoElectronico = ?, USU_Ciudad = ?, USU_Direccion = ?, USU_Telefono = ?, USU_Fecha_Nacimiento = ? WHERE USU_ID = ?";
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1, usuario.getNombre());
@@ -198,11 +199,11 @@ public class UsuarioDAO {
             preparedStatement.setString(5, usuario.getCiudad());
             preparedStatement.setString(6, usuario.getDireccion());
             preparedStatement.setString(7, usuario.getTelefono());
-            preparedStatement.setInt(8, usuario.getId());
+            preparedStatement.setDate(8, usuario.getFechaNacimiento());
+            preparedStatement.setInt(9, usuario.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

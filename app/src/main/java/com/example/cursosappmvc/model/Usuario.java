@@ -133,4 +133,8 @@ public class Usuario {
         return fechaNacimiento;
     }
 
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
 }

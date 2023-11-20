@@ -12,6 +12,8 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,38 +26,44 @@ import com.example.cursosappmvc.controller.UsuarioController;
 import com.example.cursosappmvc.model.Usuario;
 import com.google.android.material.button.MaterialButton;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class PerfilFragment extends Fragment {
 
-    private EditText nombreEditText, apellido1EditText, apellido2EditText, emailEditText, ciudadEditText, direccionEditText, telefonoEditText;
+    private EditText nombreEditText, apellido1EditText, apellido2EditText, emailEditText, direccionEditText, telefonoEditText, fechaNacimientoEditText;
+    private AutoCompleteTextView autoCompleteCiudad;
     private UsuarioController usuarioController;
     private boolean isEditMode = false;
     private MaterialButton buttonEditarPerfil;
     private int userId; // Variable para almacenar el ID del usuario
-    private EditText fechaNacimientoEditText;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        // Inicialización de EditTexts
+        // Inicialización de componentes
         nombreEditText = view.findViewById(R.id.editTextNombre);
         apellido1EditText = view.findViewById(R.id.editTextApellido1);
         apellido2EditText = view.findViewById(R.id.editTextApellido2);
         emailEditText = view.findViewById(R.id.editTextCorreoElectronico);
-        ciudadEditText = view.findViewById(R.id.editTextCiudad);
         direccionEditText = view.findViewById(R.id.editTextDireccion);
         telefonoEditText = view.findViewById(R.id.editTextTelefono);
-        buttonEditarPerfil = view.findViewById(R.id.buttonEditarPerfil);
-
+        // Configuración del EditText para la fecha de nacimiento
         fechaNacimientoEditText = view.findViewById(R.id.editTextFechaNacimiento);
-
         fechaNacimientoEditText.setOnClickListener(v -> mostrarDatePickerDialog());
 
+        // Configuración del AutoCompleteTextView para la ciudad
+        autoCompleteCiudad = view.findViewById(R.id.autoCompleteCiudad);
+        ArrayAdapter<CharSequence> adapterCiudad = ArrayAdapter.createFromResource(getContext(),
+                R.array.ciudades_array, android.R.layout.simple_dropdown_item_1line);
+        autoCompleteCiudad.setAdapter(adapterCiudad);
+        autoCompleteCiudad.setEnabled(false); // Inicialmente desactivado
+
+        buttonEditarPerfil = view.findViewById(R.id.buttonEditarPerfil);
         usuarioController = new UsuarioController(getContext());
 
         // Recuperar y usar el ID del usuario pasado como argumento
@@ -132,7 +140,7 @@ public class PerfilFragment extends Fragment {
         apellido1EditText.setEnabled(enabled);
         apellido2EditText.setEnabled(enabled);
         emailEditText.setEnabled(enabled);
-        ciudadEditText.setEnabled(enabled);
+        autoCompleteCiudad.setEnabled(enabled);
         direccionEditText.setEnabled(enabled);
         telefonoEditText.setEnabled(enabled);
         fechaNacimientoEditText.setEnabled(enabled);
@@ -144,9 +152,10 @@ public class PerfilFragment extends Fragment {
         String apellido1 = apellido1EditText.getText().toString();
         String apellido2 = apellido2EditText.getText().toString();
         String email = emailEditText.getText().toString();
-        String ciudad = ciudadEditText.getText().toString();
+        String ciudad = autoCompleteCiudad.getText().toString(); // Obtener la ciudad seleccionada
         String direccion = direccionEditText.getText().toString();
         String telefono = telefonoEditText.getText().toString();
+        String fechaNacimiento = fechaNacimientoEditText.getText().toString(); // Obtener la fecha de nacimiento
 
         // Validación del formato de correo electrónico
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -154,9 +163,16 @@ public class PerfilFragment extends Fragment {
             return; // Detener la ejecución si el formato del correo no es válido
         }
 
+        // Convertir la fecha de nacimiento al formato adecuado
+        java.sql.Date fechaNacimientoSQL = convertirFechaFormatoSQL(fechaNacimiento);
+        if (fechaNacimientoSQL == null) {
+            Toast.makeText(getContext(), "Formato de fecha de nacimiento no válido.", Toast.LENGTH_SHORT).show();
+            return; // Detener si la conversión falló
+        }
+
         // Crear un objeto Usuario con los datos actualizados
         Usuario usuarioActualizado = new Usuario();
-        usuarioActualizado.setId(userId); // Asegurarse de usar el ID correcto
+        usuarioActualizado.setId(userId);
         usuarioActualizado.setNombre(nombre);
         usuarioActualizado.setApellido1(apellido1);
         usuarioActualizado.setApellido2(apellido2);
@@ -164,6 +180,7 @@ public class PerfilFragment extends Fragment {
         usuarioActualizado.setCiudad(ciudad);
         usuarioActualizado.setDireccion(direccion);
         usuarioActualizado.setTelefono(telefono);
+        usuarioActualizado.setFechaNacimiento(fechaNacimientoSQL); // Establecer la fecha de nacimiento
 
         // Llamar a un método en UsuarioController para actualizar la base de datos
         new Thread(new Runnable() {
@@ -186,6 +203,7 @@ public class PerfilFragment extends Fragment {
         }).start();
     }
 
+
     private void cargarDatosUsuario(int userId) {
         new Thread(new Runnable() {
             @Override
@@ -202,10 +220,14 @@ public class PerfilFragment extends Fragment {
                                 apellido1EditText.setText(usuario.getApellido1());
                                 apellido2EditText.setText(usuario.getApellido2());
                                 emailEditText.setText(usuario.getCorreoElectronico());
-                                ciudadEditText.setText(usuario.getCiudad());
+                                seleccionarCiudadEnAutoComplete(usuario.getCiudad());
                                 direccionEditText.setText(usuario.getDireccion());
                                 telefonoEditText.setText(usuario.getTelefono());
-                                //fechaNacimientoEditText.setText(usuario.getFechaNacimiento());
+
+                                // Aquí se establece la fecha de nacimiento
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                String fechaNacimientoStr = sdf.format(usuario.getFechaNacimiento());
+                                fechaNacimientoEditText.setText(fechaNacimientoStr);
                             }
                         }
                     });
@@ -240,4 +262,23 @@ public class PerfilFragment extends Fragment {
         datePickerDialog.show();
     }
 
+
+    private java.sql.Date convertirFechaFormatoSQL(String fecha) {
+        SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            java.util.Date fechaParsed = formatoEntrada.parse(fecha);
+            return new java.sql.Date(fechaParsed.getTime());
+        } catch (java.text.ParseException e) {
+            Log.e("PerfilFragment", "Error al convertir la fecha: " + fecha, e);
+            return null;
+        }
+    }
+
+    // Método para seleccionar la ciudad en el AutoCompleteTextView
+    private void seleccionarCiudadEnAutoComplete(String ciudad) {
+        int position = ((ArrayAdapter<String>) autoCompleteCiudad.getAdapter()).getPosition(ciudad);
+        if (position >= 0) {
+            autoCompleteCiudad.setText(ciudad, false);
+        }
+    }
 }

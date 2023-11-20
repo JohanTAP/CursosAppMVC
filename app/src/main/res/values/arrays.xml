@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ciudades_array">
+        <item>Arica</item>
+        <item>Iquique</item>
+        <item>Antofagasta</item>
+        <item>Copiapó</item>
+        <item>La Serena</item>
+        <item>Valparaíso</item>
+        <item>Santiago</item>
+        <item>Rancagua</item>
+        <item>Talca</item>
+        <item>Chillán</item>
+        <item>Concepción</item>
+        <item>Temuco</item>
+        <item>Valdivia</item>
+        <item>Puerto Montt</item>
+        <item>Coyhaique</item>
+        <item>Punta Arenas</item>
+    </string-array>
+</resources>
