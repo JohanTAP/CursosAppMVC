@@ -28,6 +28,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -211,23 +212,24 @@ public class PerfilFragment extends Fragment {
                 Usuario usuario = usuarioController.obtenerDetallesUsuario(userId);
 
                 if (usuario != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isAdded()) {
-                                // Actualizar los TextViews con los datos del usuario
-                                nombreEditText.setText(usuario.getNombre());
-                                apellido1EditText.setText(usuario.getApellido1());
-                                apellido2EditText.setText(usuario.getApellido2());
-                                emailEditText.setText(usuario.getCorreoElectronico());
-                                seleccionarCiudadEnAutoComplete(usuario.getCiudad());
-                                direccionEditText.setText(usuario.getDireccion());
-                                telefonoEditText.setText(usuario.getTelefono());
+                    getActivity().runOnUiThread(() -> {
+                        if (isAdded()) {
+                            nombreEditText.setText(usuario.getNombre());
+                            apellido1EditText.setText(usuario.getApellido1());
+                            apellido2EditText.setText(usuario.getApellido2());
+                            emailEditText.setText(usuario.getCorreoElectronico());
+                            direccionEditText.setText(usuario.getDireccion());
+                            telefonoEditText.setText(usuario.getTelefono());
+                            autoCompleteCiudad.setText(usuario.getCiudad());
 
-                                // Aquí se establece la fecha de nacimiento
-                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                                String fechaNacimientoStr = sdf.format(usuario.getFechaNacimiento());
-                                fechaNacimientoEditText.setText(fechaNacimientoStr);
+                            // Actualiza el AutoCompleteTextView de la ciudad
+                           // seleccionarCiudadEnAutoComplete(usuario.getCiudad());
+
+                            // Actualiza el EditText de la fecha de nacimiento si es que existe
+                            // Asumiendo que tienes un getter para la fecha de nacimiento en tu clase Usuario
+                            if (usuario.getFechaNacimiento() != null) {
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                fechaNacimientoEditText.setText(sdf.format(usuario.getFechaNacimiento()));
                             }
                         }
                     });
@@ -274,11 +276,13 @@ public class PerfilFragment extends Fragment {
         }
     }
 
-    // Método para seleccionar la ciudad en el AutoCompleteTextView
+    // Método actualizado para seleccionar la ciudad en el AutoCompleteTextView
     private void seleccionarCiudadEnAutoComplete(String ciudad) {
-        int position = ((ArrayAdapter<String>) autoCompleteCiudad.getAdapter()).getPosition(ciudad);
-        if (position >= 0) {
-            autoCompleteCiudad.setText(ciudad, false);
-        }
+        autoCompleteCiudad.post(() -> {
+            int position = ((ArrayAdapter<String>) autoCompleteCiudad.getAdapter()).getPosition(ciudad);
+            if (position >= 0) {
+                autoCompleteCiudad.setText(ciudad, false);
+            }
+        });
     }
 }

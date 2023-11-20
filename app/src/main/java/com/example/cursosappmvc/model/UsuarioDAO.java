@@ -158,6 +158,7 @@ public class UsuarioDAO {
                 usuario.setApellido2(resultSet.getString("USU_Apellido2")); // con los de tu base de datos
                 usuario.setCorreoElectronico(resultSet.getString("USU_CorreoElectronico"));
                 usuario.setCiudad(resultSet.getString("USU_Ciudad"));
+                Log.d("UsuarioDAO", "Ciudad recuperada: " + usuario.getCiudad()); // Log para depuración
                 usuario.setDireccion(resultSet.getString("USU_Direccion"));
                 usuario.setTelefono(resultSet.getString("USU_Telefono"));
                 usuario.setFechaNacimiento(resultSet.getDate("USU_Fecha_Nacimiento"));
