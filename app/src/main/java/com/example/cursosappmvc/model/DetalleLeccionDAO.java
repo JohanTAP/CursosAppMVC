@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 
 public class DetalleLeccionDAO {
 
-    private static Context context = null;
+    public static Context context = null;
 
     public DetalleLeccionDAO(Context context) {
         this.context = context;
@@ -117,49 +117,6 @@ public class DetalleLeccionDAO {
                 Log.e("DetalleLeccionDAO", "Error al cerrar recursos", e);
             }
         }
-    }
-
-    public boolean leccionAnteriorCompletada(int usuarioId, int leccionIdActual, int ordenLeccionActual) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = DatabaseUtil.getConnection(context);
-
-            // Primero, obtener el ID de la lección anterior basado en lec_ordenleccion
-            String queryId = "SELECT lec_id FROM leccion WHERE lec_ordenleccion = ?";
-            preparedStatement = connection.prepareStatement(queryId);
-            preparedStatement.setInt(1, ordenLeccionActual - 1);
-            ResultSet rsId = preparedStatement.executeQuery();
-            if (!rsId.next()) {
-                return false;  // No hay lección anterior
-            }
-            int leccionIdAnterior = rsId.getInt("lec_id");
-
-            // Luego, verificar si esta lección anterior fue completada por el usuario
-            String query = "SELECT DET_EstadoProgreso FROM DetalleLeccion WHERE DET_USU_ID = ? AND DET_LEC_ID = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, usuarioId);
-            preparedStatement.setInt(2, leccionIdAnterior);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                String estado = rs.getString("DET_EstadoProgreso");
-                return "Completada".equals(estado);
-            }
-        } catch (SQLException e) {
-            Log.e("DetalleLeccionDAO", "Error al verificar si la lección anterior fue completada", e);
-        } finally {
-            try {
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                Log.e("DetalleLeccionDAO", "Error al cerrar recursos", e);
-            }
-        }
-        return false;
     }
 
     // Añadir esta interfaz al principio de tu clase

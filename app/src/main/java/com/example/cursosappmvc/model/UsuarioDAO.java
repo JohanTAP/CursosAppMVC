@@ -38,33 +38,6 @@ public class UsuarioDAO {
         }
     }
 
-    // Verifica las credenciales del usuario en la base de datos
-    public boolean verificarCredenciales(String correo, String contrasena) {
-        boolean valid = false;
-
-        // Lógica de conexión a la base de datos
-        try (Connection connection = DatabaseUtil.getConnection(context);
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT USU_Contrasena FROM Usuario WHERE USU_CorreoElectronico = ?")) {
-
-            preparedStatement.setString(1, correo);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                String storedPasswordHash = resultSet.getString("USU_Contrasena");
-
-                // Asumiendo que tienes una función hashPassword
-                String enteredPasswordHash = hashPassword(contrasena);
-
-                if (storedPasswordHash.equals(enteredPasswordHash)) {
-                    valid = true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return valid;
-    }
-
     public Usuario buscarPorCorreoYContrasena(String correoElectronico, String contrasena) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -91,50 +64,6 @@ public class UsuarioDAO {
             // Cierra las conexiones, resultados y declaraciones aquí
         }
         return null;
-    }
-
-    public boolean guardar(Usuario usuario) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = DatabaseUtil.getConnection(context);
-            String query = "INSERT INTO Usuario (nombre, apellido1, ...) VALUES (?, ?, ...)";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, usuario.getNombre());
-            // ... establecer los demás campos del usuario
-
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Cierra las conexiones y declaraciones aquí
-        }
-        return false;
-    }
-
-    public boolean actualizarTokenRestablecimiento(String correoElectronico, String token) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = DatabaseUtil.getConnection(context);
-            String query = "UPDATE Usuario SET tokenReset = ? WHERE correoElectronico = ?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, token);
-            preparedStatement.setString(2, correoElectronico);
-
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Cierra las conexiones y declaraciones aquí
-        }
-        return false;
     }
 
     public Usuario buscarPorId(int userId) {

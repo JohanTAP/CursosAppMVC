@@ -14,30 +14,12 @@ public class UsuarioController {
         this.usuarioDAO = new UsuarioDAO(context);
     }
 
-    public boolean existeUsuarioConCredenciales(String correo, String contrasena) {
-        // Convertir la contraseña ingresada a su hash
-        String hashedPassword = UsuarioDAO.hashPassword(contrasena);
-        return usuarioDAO.verificarCredenciales(correo, hashedPassword);
-    }
-
     public int iniciarSesion(String correoElectronico, String contrasena) {
         Usuario usuario = usuarioDAO.buscarPorCorreoYContrasena(correoElectronico, contrasena);
         if (usuario != null) {
             return usuario.getId();
         }
         return -1;
-    }
-
-    public boolean registrarUsuario(Usuario usuario) {
-        return usuarioDAO.guardar(usuario);
-    }
-
-    public boolean restablecerContrasena(String correoElectronico) {
-        return usuarioDAO.actualizarTokenRestablecimiento(correoElectronico, generarToken());
-    }
-
-    private String generarToken() {
-        return String.valueOf(System.currentTimeMillis());
     }
 
     public Usuario obtenerDetallesUsuario(int userId) {

@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Message createEmailMessage(String email, String subject, String messageBody) throws MessagingException {
         final String username = "cursosappmvc@gmail.com";
-        final String password = "mxbp kuno uafp rqbh";
+        final String password = "mxbpkunouafprqbh";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

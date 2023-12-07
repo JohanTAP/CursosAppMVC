@@ -1,5 +1,7 @@
 package com.example.cursosappmvc.util;
 
+import static com.example.cursosappmvc.model.DetalleLeccionDAO.context;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -7,22 +9,28 @@ public class SharedPrefManager {
 
     private static final String SHARED_PREF_NAME = "MyAppPrefs";
     private static SharedPrefManager instance;
-    private Context context;
+    private static SharedPreferences prefs;
 
     private SharedPrefManager(Context context) {
-        this.context = context;
+        // Inicializa las preferencias aquí para asegurarte de que el contexto no sea null.
+        this.prefs = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public static synchronized SharedPrefManager getInstance(Context context) {
         if (instance == null) {
-            instance = new SharedPrefManager(context);
+            instance = new SharedPrefManager(context.getApplicationContext());
         }
         return instance;
     }
 
-    public boolean isUserLoggedIn() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean("isLoggedIn", false);
+    public int getLoginAttempts() {
+        return prefs.getInt("login_attempts", 0);
+    }
+
+    public static void setLoginAttempts(int attempts) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("login_attempts", attempts);
+        editor.apply();
     }
 
     // Método para establecer el estado de inicio de sesión del usuario
@@ -52,17 +60,6 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("shouldRefreshLecciones", shouldRefresh);
         editor.apply();
-    }
-
-    // Método para obtener el indicador de actualización
-    public boolean shouldRefreshLecciones() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean("shouldRefreshLecciones", false);
-    }
-
-    // Método para reiniciar el indicador
-    public void resetShouldRefreshLecciones() {
-        setShouldRefreshLecciones(false);
     }
 
 }

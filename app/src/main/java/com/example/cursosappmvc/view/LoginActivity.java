@@ -9,7 +9,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout usernameTextInputLayout;
     private int cursoId = -1;
     private int loginAttempts = 0; // Contador de intentos de inicio de sesión
+    private Button loginButton;
+    private TextView registerLinkTextView;
+    private ProgressBar loginProgressBar;
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -56,6 +61,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Inicialización de los componentes de la UI
+        loginButton = findViewById(R.id.loginButton);
+        registerLinkTextView = findViewById(R.id.registerLinkTextView);
+        loginProgressBar = findViewById(R.id.loginProgressBar);
 
         cursoId = getIntent().getIntExtra("cursoId", -1); // Guarda el cursoId
 
@@ -89,16 +99,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Recuperar el número de intentos fallidos
+        SharedPrefManager sharedPrefManager = SharedPrefManager.getInstance(LoginActivity.this);
+        loginAttempts = sharedPrefManager.getLoginAttempts();
+
     }
 
     public void loginUser(View view) {
 
         if (loginAttempts >= 3) {
-            showToast("Demasiados intentos fallidos. Por favor, contacta con el administrador.");
+            showToast("Demasiados intentos fallidos. Por favor, contactanos a soporte@adventistas.org.");
             return;
         }
 
-        String username = usernameEditText.getText().toString();
+        // Codigo sanitizado. Datos de entrada con expresiones regulares para prevenir inyeccion SQL
+        String username = usernameEditText.getText().toString().replaceAll("[^a-zA-Z0-9@._-]", "");
         String password = passwordEditText.getText().toString();
 
         if (username.isEmpty()) {
@@ -123,11 +138,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Sanitizar los datos de entrada para prevenir SQL injection
-        username = username.replaceAll("[^a-zA-Z0-9@._-]", "");
+        // Desactivar botones y mostrar el indicador de carga
+        setLoginUIState(false);
 
         Handler handler = new Handler(new Handler.Callback() {
             public boolean handleMessage(Message message) {
+
                 if (message.what == 1) {
 
                     int userId = (int) message.obj;
@@ -147,6 +163,9 @@ public class LoginActivity extends AppCompatActivity {
                     // Suponiendo que el inicio de sesión fue exitoso...
                     sharedPrefManager.setShouldRefreshLecciones(true);
 
+                    // Reactivar botones y ocultar el indicador de carga
+                    setLoginUIState(true);
+
                     // Inicia LeccionActivity pasando el cursoId
                     if (cursoId != -1) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -159,11 +178,15 @@ public class LoginActivity extends AppCompatActivity {
                     usernameTextInputLayout.setError("No pudimos encontrar la combinación de correo electrónico y contraseña.");
                     passwordTextInputLayout.setError("Verifica tus datos de inicio de sesión.");
                     loginAttempts++;
+                    SharedPrefManager.setLoginAttempts(loginAttempts);
                     if (loginAttempts >= 3) {
-                        showToast("Demasiados intentos fallidos. Por favor, contacta con el administrador.");
+                        showToast("Demasiados intentos fallidos. Por favor, contactanos a soporte@adventistas.org.");
+                        loginProgressBar.setVisibility(View.GONE);
                     } else {
                         usernameTextInputLayout.setError("No pudimos encontrar la combinación de correo electrónico y contraseña.");
                         passwordTextInputLayout.setError("Verifica tus datos de inicio de sesión.");
+                        // Reactivar botones y ocultar el indicador de carga
+                        setLoginUIState(true);
                     }
                 } else {
                     showToast(message.obj.toString());
@@ -176,6 +199,11 @@ public class LoginActivity extends AppCompatActivity {
         executor.execute(new VerificarCredencialesTask(username, password, handler));
     }
 
+    private void setLoginUIState(boolean enabled) {
+        loginButton.setEnabled(enabled);
+        registerLinkTextView.setEnabled(enabled);
+        loginProgressBar.setVisibility(enabled ? View.GONE : View.VISIBLE);
+    }
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

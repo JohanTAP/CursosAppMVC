@@ -223,7 +223,7 @@ public class PerfilFragment extends Fragment {
                             autoCompleteCiudad.setText(usuario.getCiudad());
 
                             // Actualiza el AutoCompleteTextView de la ciudad
-                           // seleccionarCiudadEnAutoComplete(usuario.getCiudad());
+                            // seleccionarCiudadEnAutoComplete(usuario.getCiudad());
 
                             // Actualiza el EditText de la fecha de nacimiento si es que existe
                             // Asumiendo que tienes un getter para la fecha de nacimiento en tu clase Usuario
