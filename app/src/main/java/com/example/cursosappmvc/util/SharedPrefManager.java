@@ -1,7 +1,5 @@
 package com.example.cursosappmvc.util;
 
-import static com.example.cursosappmvc.model.DetalleLeccionDAO.context;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -33,31 +31,28 @@ public class SharedPrefManager {
         editor.apply();
     }
 
-    // Método para establecer el estado de inicio de sesión del usuario
-    public void setUserLoggedIn(boolean isLoggedIn) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isLoggedIn", isLoggedIn);
-        editor.apply();
-    }
-
+    // Método revisado para obtener el ID del usuario
     public int getUserId() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("userId", -1); // retorna -1 si no hay un ID almacenado
+        return prefs.getInt("userId", -1); // Utiliza la instancia 'prefs'
     }
 
-    // Método para establecer el ID del usuario
+    // Método revisado para establecer el ID del usuario
     public void setUserId(int userId) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = prefs.edit(); // Utiliza la instancia 'prefs'
         editor.putInt("userId", userId);
         editor.apply();
     }
 
-    // Método para establecer el indicador de actualización
+    // Método revisado para establecer el estado de inicio de sesión del usuario
+    public void setUserLoggedIn(boolean isLoggedIn) {
+        SharedPreferences.Editor editor = prefs.edit(); // Utiliza la instancia 'prefs'
+        editor.putBoolean("isLoggedIn", isLoggedIn);
+        editor.apply();
+    }
+
+    // Método revisado para establecer el indicador de actualización
     public void setShouldRefreshLecciones(boolean shouldRefresh) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = prefs.edit(); // Utiliza la instancia 'prefs'
         editor.putBoolean("shouldRefreshLecciones", shouldRefresh);
         editor.apply();
     }
